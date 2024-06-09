@@ -1,0 +1,9 @@
+src/main/resources/application.properties
+
+# intelliJ
+.idea
+.idea/*.xml
+*.iml
+
+/build/
+.gradle

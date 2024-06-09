@@ -1,0 +1,16 @@
+package birdjun.profairmanager.user.domain;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum Role {
+    USER("ROLE_USER", "사용자"),
+    MANAGER("ROLE_MANAGER", "선생님"),
+    ADMIN("ROLE_ADMIN", "관리자"),
+    MASTER("ROLE_MASTER", "마스터");
+
+    private final String key;
+    private final String name;
+}
