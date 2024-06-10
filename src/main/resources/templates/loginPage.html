@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-<div class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
-    <a href="/oauth2/authorization/google">구글 아이디로 로그인</a>
+<div class="root">
+    <div class="signin-wrapper form active">
+        <div class="form-wrapper">
+            <h5>Welcome Back  👊</h5>
+            <button onclick="location.href='/oauth2/authorization/google'" class="button primary" style="font-size: 17px">
+                구글 로그인
+            </button>
+        </div>
+    </div>
 </div>
-<!--<script src="script.js"></script>-->
 </body>
 </html>

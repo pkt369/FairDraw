@@ -23,7 +23,7 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public String login() {
         return "loginPage";
     }

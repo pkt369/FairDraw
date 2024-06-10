@@ -33,7 +33,7 @@ public class SecurityConfig {
                         HeadersConfigurer.FrameOptionsConfig::disable
                 ))
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/", "/login/*", "/logout/*", "/error").permitAll()
+                        .requestMatchers("/", "/user/login", "/logout", "/error").permitAll()
                 )
                 .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
                 .oauth2Login(Customizer.withDefaults());
