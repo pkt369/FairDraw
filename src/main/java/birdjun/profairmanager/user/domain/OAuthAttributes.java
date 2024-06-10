@@ -31,6 +31,7 @@ public class OAuthAttributes {
     // 여기서 registrationId는 OAuth2 로그인을 처리한 서비스 명("google","kakao","naver"..)이 되고,
     // userNameAttributeName은 해당 서비스의 map의 키값이 되는 값이됩니다. {google="sub", kakao="id", naver="response"}
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        System.out.println(registrationId);
         if (registrationId.equals("kakao")) {
             return ofKakao(userNameAttributeName, attributes);
         } else if (registrationId.equals("naver")) {
@@ -53,11 +54,13 @@ public class OAuthAttributes {
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");    // 네이버에서 받은 데이터에서 프로필 정보다 담긴 response 값을 꺼낸다.
 
-        return new OAuthAttributes(attributes,
-                userNameAttributeName,
-                (String) response.get("name"),
-                (String) response.get("email"),
-                (String) response.get("profile_image"));
+        return OAuthAttributes.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .picture((String) response.get("profile_image"))
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
