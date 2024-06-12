@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div class="navbar" th:fragment="navbar">
+        <img src="/images/teacher.jpeg" alt="teacher" class="logo_image">
+        <div class="navbar__space"></div>
+        <div th:if="${userName}">
+            <label th:text="${userName} + 님" style="margin-right: 10px"></label>
+            <button class="login-button" onclick="location.href='/logout'">로그아웃</button>
+        </div>
+        <div th:if="!${userName}">
+            <button class="login-button" onclick="location.href='/user/login'">로그인</button>
+        </div>
+    </div>
+</html>

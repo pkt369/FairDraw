@@ -7,31 +7,22 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div class="navbar">
-    <img src="/images/teacher.jpeg" alt="teacher" class="logo_image">
-    <div class="navbar__space"></div>
-    <div th:if="${userName}">
-        <label th:text="${userName} + 님" style="margin-right: 10px"></label>
-        <button class="login-button" onclick="location.href='/logout'">로그아웃</button>
-    </div>
-    <div th:if="!${userName}">
-        <button class="login-button" onclick="location.href='/user/login'">로그인</button>
-    </div>
-</div>
+<div th:replace="common/navbar"></div>
 <div class="content">
 <!--    <img src="/images/background.jpeg" alt="background">-->
-    <div th:if="!${userName}">
-        <h1 class="main-content-bold">학생 관리<br>프로그램</h1>
-        <h3 class="sub-content-bold">학생 관리를 위한 기능을<br>사용해보세요.</h3>
-        <div class="svg-container">
-            <svg class="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="#0070f3"/>
-            </svg>
+    <h1 class="main-content-bold">학생 관리<br>프로그램</h1>
+    <h3 class="sub-content-bold">학생 관리를 위한 기능을<br>사용해보세요.</h3>
+    <div class="svg-container">
+        <svg class="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="#0070f3"/>
+        </svg>
+
+        <div th:if="!${userName}">
+            <button class="index-big-button" onclick="location.href='/user/login'">로그인</button>
         </div>
-    </div>
-
-    <div th:if="${userName}">
-
+        <div th:if="${userName}">
+            <button class="index-big-button" onclick="location.href='/app'">학생 관리하기</button>
+        </div>
     </div>
 </div>
 
