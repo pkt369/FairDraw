@@ -1,5 +1,6 @@
 package birdjun.profairmanager.config.auth;
 
+import birdjun.profairmanager.user.domain.Role;
 import birdjun.profairmanager.user.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -35,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/", "/user/login", "/logout", "/error").permitAll()
                 )
+                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
+                        .requestMatchers("/app/**", "/drawing/**").hasRole(Role.USER.getName()))
                 .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
                 .oauth2Login(Customizer.withDefaults());
 
