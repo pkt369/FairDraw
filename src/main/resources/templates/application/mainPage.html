@@ -4,8 +4,39 @@
     <meta charset="UTF-8">
     <title>app</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-<div th:replace="common/navbar"></div>
+<div th:replace="layouts/navbar"></div>
+<div class="content">
+    <div class="app-container">
+        <div class="app-item" onclick="location.href='/drawing'">
+            <img src="/images/background.jpeg" alt="Product 1">
+            <div class="app-details">
+                <h3>추첨</h3>
+                <p>학생들을 추첨하고 문자 메세지 등을 연계해서 사용해보세요</p>
+                <div class="tags">
+                    <span>인기</span>
+                    <span>귀찮음 해결</span>
+                </div>
+            </div>
+        </div>
+        <div class="app-item">
+            <img src="/images/google-logo.jpeg" alt="Product 1">
+            <div class="app-details">
+                <h3>타카타카</h3>
+                <p>유아KC 스탠다드...</p>
+                <div class="tags">
+                    <span>오늘출발</span>
+                    <span>무료배송</span>
+                    <span>특가</span>
+                </div>
+            </div>
+        </div>
+        <!-- Repeat .product-item for more products -->
+    </div>
+</div>
+
+
 </body>
 </html>

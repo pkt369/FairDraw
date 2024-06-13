@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/drawing")
 public class DrawingController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String mainPage() {
-        return "drawing/mainPage";
+        return "drawing/search";
     }
 }
