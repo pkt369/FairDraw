@@ -3,6 +3,6 @@ package birdjun.profairmanager.user.domain;
 import lombok.Getter;
 
 @Getter
-public enum Sex {
+public enum Gender {
     M, W
 }

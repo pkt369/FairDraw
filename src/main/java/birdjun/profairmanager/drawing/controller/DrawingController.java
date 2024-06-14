@@ -14,4 +14,9 @@ public class DrawingController {
     public String mainPage() {
         return "drawing/search";
     }
+
+    @GetMapping("/create")
+    public String createPage() {
+        return "drawing/create";
+    }
 }

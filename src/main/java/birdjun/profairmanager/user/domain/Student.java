@@ -2,8 +2,6 @@ package birdjun.profairmanager.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -19,6 +17,10 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String name;
@@ -37,7 +39,11 @@ public class Student {
     // 1: 남자, 0: 여자
     @Column(nullable = false, length = 1)
     @Enumerated(EnumType.STRING)
-    private Sex sex;
+    private Gender gender;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DisabledType disabledType;
 
     @CreatedDate
     private LocalDateTime createdAt;

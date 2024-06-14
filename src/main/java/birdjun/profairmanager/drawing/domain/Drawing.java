@@ -27,6 +27,9 @@ public class Drawing {
     private String standard;
 
     @Column(nullable = false)
+    private Integer winnerCount;
+
+    @Column(nullable = false)
     private Boolean isDuplicated;
 
     @CreatedDate
