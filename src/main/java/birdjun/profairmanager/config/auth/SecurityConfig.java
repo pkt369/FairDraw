@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/user/login", "/logout", "/error").permitAll()
                 )
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/app/**", "/drawing/**").hasRole(Role.USER.getName()))
+                        .requestMatchers("/app/**", "/drawing/**", "/student/**").hasRole(Role.USER.getName()))
                 .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
                 .oauth2Login(Customizer.withDefaults());
 
