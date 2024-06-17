@@ -2,8 +2,8 @@ package birdjun.profairmanager.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class Student {
     private String guardianPhone;
 
     @Column(nullable = false)
-    private Short age;
+    private String birth;
 
     // 1: 남자, 0: 여자
     @Column(nullable = false, length = 1)
@@ -45,9 +46,15 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private DisabledType disabledType;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @UpdateTimestamp
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public void initUser(User user) {
+        this.user = user;
+    }
 }

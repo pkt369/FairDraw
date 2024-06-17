@@ -27,10 +27,10 @@ public class StudentService {
     }
 
     public List<Student> findByNameAndUser(String name, User user) {
-        return studentRepository.findByNameAndUser(name, user);
+        return studentRepository.findByNameAndUser_Id(name, user.getId());
     }
 
     public List<Student> findByUser(User user) {
-        return studentRepository.findByUser(user);
+        return studentRepository.findByUser_Id(user.getId());
     }
 }

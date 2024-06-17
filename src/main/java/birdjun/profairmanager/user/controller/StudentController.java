@@ -3,9 +3,11 @@ package birdjun.profairmanager.user.controller;
 import birdjun.profairmanager.config.ApiResponse;
 import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
+import birdjun.profairmanager.user.dto.StudentDto;
 import birdjun.profairmanager.user.service.StudentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,22 +24,30 @@ public class StudentController {
     private final HttpSession httpSession;
 
     @PostMapping("/create")
-    public void create(@RequestBody Student student) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void create(@RequestBody StudentDto studentDto) {
+        User user = (User) httpSession.getAttribute("user");
+        Student student = studentDto.toEntity();
+        student.initUser(user);
+
         studentService.save(student);
     }
 
     @GetMapping("/list")
     @ResponseBody
-    public ApiResponse<List<Student>> list() {
+    public ApiResponse<List<StudentDto>> list() {
         User user = (User) httpSession.getAttribute("user");
-        return ApiResponse.success(studentService.findByUser(user));
+        List<Student> students = studentService.findByUser(user);
+        List<StudentDto> list = students.stream().map(StudentDto::fromEntity).toList();
+        return ApiResponse.success(list);
     }
 
     @GetMapping("/list/name")
     @ResponseBody
-    public List<Student> listWithName(@RequestParam(value = "name") String name) {
+    public ApiResponse<List<StudentDto>> listWithName(@RequestParam(value = "name") String name) {
         User user = (User) httpSession.getAttribute("user");
-        System.out.println(user.toString());
-        return studentService.findByNameAndUser(name, user);
+        List<Student> students = studentService.findByNameAndUser(name, user);
+        List<StudentDto> list = students.stream().map(StudentDto::fromEntity).toList();
+        return ApiResponse.success(list);
     }
 }

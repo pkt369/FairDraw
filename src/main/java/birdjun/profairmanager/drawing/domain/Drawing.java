@@ -1,10 +1,8 @@
 package birdjun.profairmanager.drawing.domain;
 
+import birdjun.profairmanager.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,17 +12,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class Drawing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "drawing_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(nullable = false)
     private String name;
-
-    @Column(columnDefinition = "json")
-    private String standard;
 
     @Column(nullable = false)
     private Integer winnerCount;

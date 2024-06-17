@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     public List<Student> findByName(String name);
-    public List<Student> findByUser(User user);
-    public List<Student> findByNameAndUser(String name, User user);
+    public List<Student> findByUser_Id(Long id);
+    public List<Student> findByNameAndUser_Id(String name, Long userId);
 }

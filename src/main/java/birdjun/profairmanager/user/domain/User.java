@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

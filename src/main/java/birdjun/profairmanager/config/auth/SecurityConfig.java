@@ -40,6 +40,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/app/**", "/drawing/**", "/student/**").hasRole(Role.USER.getName()))
                 .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
+                .formLogin(formLogin -> formLogin.loginPage("/user/login"))
+                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/user/login");
+                }))
                 .oauth2Login(Customizer.withDefaults());
 
         return http.build();
