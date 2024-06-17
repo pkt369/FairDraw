@@ -2,7 +2,6 @@ package birdjun.profairmanager.drawing.domain.dto;
 
 import birdjun.profairmanager.drawing.domain.Drawing;
 import birdjun.profairmanager.user.domain.User;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;

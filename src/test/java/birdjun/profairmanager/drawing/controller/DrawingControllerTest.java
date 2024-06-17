@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -20,11 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,12 +48,7 @@ class DrawingControllerTest {
         User user = userSetUp.createUser("user1");
         userSetUp.save(user);
 
-        Drawing drawing = Drawing.builder()
-                .name("drawing1")
-                .user(user)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing = createDrawing("drawing1", user);
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/drawing/create")
@@ -82,20 +72,10 @@ class DrawingControllerTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user1)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user1);
         drawingService.save(drawing1);
 
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -103,12 +83,7 @@ class DrawingControllerTest {
         User user = userSetUp.createUser("user1");
         userSetUp.save(user);
 
-        Drawing drawing = Drawing.builder()
-                .name("drawing1")
-                .user(user)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        createDrawing("drawing1", user);
 
         //when
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -136,20 +111,9 @@ class DrawingControllerTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user1)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user1);
         drawingService.save(drawing1);
-
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -179,20 +143,10 @@ class DrawingControllerTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user2);
         drawingService.save(drawing1);
 
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -209,5 +163,14 @@ class DrawingControllerTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(0)));
+    }
+
+    private static Drawing createDrawing(String name, User user) {
+        return Drawing.builder()
+                .name(name)
+                .user(user)
+                .isDuplicated(Boolean.FALSE)
+                .winnerCount(1)
+                .build();
     }
 }

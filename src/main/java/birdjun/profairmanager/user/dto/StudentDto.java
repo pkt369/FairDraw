@@ -22,6 +22,8 @@ public class StudentDto {
 
     private String phone;
 
+    private String email;
+
     private String guardianName;
 
     private String guardianPhone;
@@ -39,6 +41,7 @@ public class StudentDto {
         return Student.builder()
                 .name(this.name)
                 .phone(this.phone)
+                .email(this.email)
                 .guardianName(this.guardianName)
                 .guardianPhone(this.guardianPhone)
                 .birth(this.birth)
@@ -52,6 +55,7 @@ public class StudentDto {
                 .id(student.getId())
                 .name(student.getName())
                 .phone(student.getPhone())
+                .email(student.getEmail())
                 .guardianName(student.getGuardianName())
                 .guardianPhone(student.getGuardianPhone())
                 .birth(student.getBirth())

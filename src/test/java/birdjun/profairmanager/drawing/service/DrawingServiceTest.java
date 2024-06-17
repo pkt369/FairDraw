@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -44,12 +43,7 @@ class DrawingServiceTest {
         User user = userSetUp.createUser("user1");
         userSetUp.save(user);
 
-        Drawing drawing = Drawing.builder()
-                .name("drawing1")
-                .user(user)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing = createDrawing("drawing1", user);
 
         //when
         drawingService.save(drawing);
@@ -69,20 +63,10 @@ class DrawingServiceTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user1)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user1);
         drawingService.save(drawing1);
 
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -102,20 +86,10 @@ class DrawingServiceTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user1)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user1);
         drawingService.save(drawing1);
 
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -135,20 +109,10 @@ class DrawingServiceTest {
         User user2 = userSetUp.createUser("user2");
         userSetUp.save(user2);
 
-        Drawing drawing1 = Drawing.builder()
-                .name("drawing1")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(1)
-                .build();
+        Drawing drawing1 = createDrawing("drawing1", user2);
         drawingService.save(drawing1);
 
-        Drawing drawing2 = Drawing.builder()
-                .name("drawing2")
-                .user(user2)
-                .isDuplicated(Boolean.FALSE)
-                .winnerCount(2)
-                .build();
+        Drawing drawing2 = createDrawing("drawing2", user2);
         drawingService.save(drawing2);
 
         //when
@@ -158,4 +122,12 @@ class DrawingServiceTest {
         assertEquals(0, list.size());
     }
 
+    private Drawing createDrawing(String name, User user) {
+        return Drawing.builder()
+                .name(name)
+                .user(user)
+                .isDuplicated(Boolean.FALSE)
+                .winnerCount(1)
+                .build();
+    }
 }

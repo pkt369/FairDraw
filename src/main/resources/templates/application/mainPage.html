@@ -1,42 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>app</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/app.css">
-</head>
+<html xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" lang="">
+
 <body>
-<div th:replace="layouts/navbar"></div>
-<div class="content">
-    <div class="app-container">
-        <div class="app-item" onclick="location.href='/drawing'">
-            <img src="/images/background.jpeg" alt="Product 1">
-            <div class="app-details">
-                <h3>추첨</h3>
-                <p>학생들을 추첨하고 문자 메세지 등을 연계해서 사용해보세요</p>
-                <div class="tags">
-                    <span>인기</span>
-                    <span>귀찮음 해결</span>
+<div layout:fragment="content">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">App /</span> 기능</h4>
+
+    <!-- Grid Card -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <div class="col" onclick="location.href='/drawing'" style="cursor: pointer">
+            <div class="card h-100">
+                <img class="card-img-top" src="/images/drawing.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">추첨하기</h5>
+                    <p class="card-text">
+                        학생들을 추첨하고 연계해서 당첨 메세지까지 보내보세요!
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="app-item">
-            <img src="/images/google-logo.jpeg" alt="Product 1">
-            <div class="app-details">
-                <h3>타카타카</h3>
-                <p>유아KC 스탠다드...</p>
-                <div class="tags">
-                    <span>오늘출발</span>
-                    <span>무료배송</span>
-                    <span>특가</span>
+        <div class="col">
+            <div class="card h-100">
+                <img class="card-img-top" src="/images/vendor/elements/13.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        This is a longer card with supporting text below as a natural lead-in to additional content.
+                        This content is a little bit longer.
+                    </p>
                 </div>
             </div>
         </div>
-        <!-- Repeat .product-item for more products -->
     </div>
 </div>
-
-
 </body>
 </html>

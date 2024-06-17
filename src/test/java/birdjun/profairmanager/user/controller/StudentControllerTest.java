@@ -4,6 +4,7 @@ import birdjun.profairmanager.common.UserSetUp;
 import birdjun.profairmanager.user.domain.*;
 import birdjun.profairmanager.user.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class StudentControllerTest {
 
     @Test
     @DisplayName("학생 요청시 생성 시 잘 생성되어야 한다.")
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "user")
     public void givenCreateApi_whenCreateStudent_thenSuccess() throws Exception {
         //given
         User user = userSetUp.createUser("user1");
@@ -51,9 +52,13 @@ class StudentControllerTest {
         Student student = userSetUp.createStudent("student1");
         student.initUser(user);
 
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mockHttpSession.setAttribute("user", user);
+
         //when
         ResultActions resultActions = mockMvc.perform(post("/student/create")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .session(mockHttpSession)
                         .content(objectMapper.writeValueAsString(student))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print());
@@ -65,7 +70,7 @@ class StudentControllerTest {
 
     @Test
     @DisplayName("생성되어 있는 학생들이 있을때 내가 생성한 학생들만 가져와야 한다.")
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "user")
     public void givenStudent_whenCallListApi_thenSuccess() throws Exception {
         //given
         User user1 = userSetUp.createUser("user1");

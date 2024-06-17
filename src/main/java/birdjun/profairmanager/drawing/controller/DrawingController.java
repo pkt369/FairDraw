@@ -4,6 +4,7 @@ import birdjun.profairmanager.config.ApiResponse;
 import birdjun.profairmanager.drawing.domain.Drawing;
 import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
 import birdjun.profairmanager.drawing.service.DrawingService;
+import birdjun.profairmanager.user.domain.Role;
 import birdjun.profairmanager.user.domain.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

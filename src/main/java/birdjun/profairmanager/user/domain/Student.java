@@ -23,6 +23,9 @@ public class Student {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column
+    private String email;
+
     @Column(nullable = false)
     private String name;
 

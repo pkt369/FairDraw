@@ -1,6 +1,5 @@
 package birdjun.profairmanager.config.interceptor;
 
-import birdjun.profairmanager.user.domain.SessionUser;
 import birdjun.profairmanager.user.domain.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
