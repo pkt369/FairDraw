@@ -64,7 +64,8 @@ public class StudentController {
     @PostMapping("/create/excel/upload")
     @ResponseBody
     public ApiResponse<List<StudentDto>> uploadExcel(@RequestParam("file") MultipartFile file) throws Exception {
-        List<StudentDto> students = studentService.excelUpload(file);
+        User user = (User) httpSession.getAttribute("user");
+        List<StudentDto> students = studentService.excelUpload(file, user);
         return ApiResponse.success(students);
     }
 }

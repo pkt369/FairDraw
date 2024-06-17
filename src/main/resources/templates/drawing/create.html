@@ -7,11 +7,10 @@
 </th:block>
 <body>
 <div layout:fragment="content">
-
     <div class="card mb-4">
         <h5 class="card-header">조건</h5>
         <div class="card-body">
-            <div class="row demo-vertical-spacing">
+            <div class="row demo-vertical-spacing mb-3">
                 <div class="col">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalToggle1">
                         <strong>학생 추가하기</strong>
@@ -24,15 +23,11 @@
                 </div>
                 <div class="col">
                     <div class="mb-0 row">
-                        <label for="html5-number-input" class="col-md-3 col-form-label">추첨 갯수: </label>
+                        <label for="studentSize" class="col-md-3 col-form-label">뽑힐 학생 수: </label>
                         <div class="col-md-5">
-                            <input class="form-control" type="number" value="1" id="html5-number-input">
+                            <input class="form-control" type="number" value="1" id="studentSize">
                         </div>
                     </div>
-                </div>
-                <div class="form-check form-switch col">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
-                    <label class="form-check-label" for="flexSwitchCheckChecked">다른 추첨에서 당첨자 중복 허용</label>
                 </div>
             </div>
         </div>

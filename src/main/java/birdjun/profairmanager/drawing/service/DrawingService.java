@@ -2,6 +2,7 @@ package birdjun.profairmanager.drawing.service;
 
 import birdjun.profairmanager.drawing.domain.Drawing;
 import birdjun.profairmanager.drawing.repository.DrawingRepository;
+import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +25,9 @@ public class DrawingService {
 
     public List<Drawing> findByNameAndUser(String name, User user, Pageable pageable) {
         return drawingRepository.findByNameAndUser_id(name, user.getId(), pageable);
+    }
+
+    public List<Student> randomDrawing(int studentSize, List<Drawing> removeList) {
+        return null;
     }
 }

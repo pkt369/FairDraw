@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -117,13 +118,37 @@ class StudentServiceTest {
         studentService.save(student2);
 
         //then
-        studentService.findAll().forEach(System.out::println);
-
         List<Student> students = studentService.findByUser(user2);
         assertThat(students).hasSize(0);
     }
 
+    @Test
+    @DisplayName("이름, 생년월일, 성별, 장애타입까지 중복이면 중복된 학생으로 보고 중복으로 저장하지 않는다.")
+    public void givenSameStudent_whenSaveStudent_thenNoSaveStudent() throws Exception {
+        //given
+        User user1 = createUser("user1");
+        userRepository.save(user1);
+        Student student1 = createStudent("student1");
+        student1.initUser(user1);
+        Student student2 = createStudent("student2");
+        student2.initUser(user1);
 
+        studentService.save(student1);
+        studentService.save(student2);
+
+        Student duplicateUser = createStudent("student1");
+        Student notDuplicateUser = createStudent("new_student");
+        List<Student> students = new ArrayList<>();
+        students.add(duplicateUser);
+        students.add(notDuplicateUser);
+
+        //when
+        List<Student> removedDuplicateStudents = studentService.removeDuplicateStudents(students, user1);
+
+        //then
+        assertThat(removedDuplicateStudents).hasSize(1);
+        assertThat(removedDuplicateStudents.getFirst()).isEqualTo(notDuplicateUser);
+    }
 
     public User createUser(String name) {
         return new User(name, "aaa@naver.com", "aaaaaaa", Role.USER);

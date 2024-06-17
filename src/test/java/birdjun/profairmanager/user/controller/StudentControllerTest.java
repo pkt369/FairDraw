@@ -104,7 +104,6 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.data[0].name", equalTo(student1.getName())));
     }
 
-
     @Test
     @DisplayName("생성되어 있는 학생들이 있을때 이름으로 검색하면 내가 생성하고 검색한 학생만 가져와야 한다.")
     @WithMockUser(username = "user", roles = {"USER"})
