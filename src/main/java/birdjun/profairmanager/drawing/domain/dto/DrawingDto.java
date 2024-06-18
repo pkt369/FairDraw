@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder
 public class DrawingDto {
@@ -14,14 +17,15 @@ public class DrawingDto {
     @NotNull
     private Integer winnerCount;
     @NotNull
-    private Boolean isDuplicated;
+    private List<Long> studentIdList = new ArrayList<>();
+    @Builder.Default
+    private List<Drawing> removeList = new ArrayList<>();
 
     public Drawing toEntity(User user) {
         return Drawing.builder()
                 .name(this.name)
                 .winnerCount(winnerCount)
                 .user(user)
-                .isDuplicated(isDuplicated)
                 .build();
     }
 
@@ -29,7 +33,6 @@ public class DrawingDto {
         return DrawingDto.builder()
                 .name(drawing.getName())
                 .winnerCount(drawing.getWinnerCount())
-                .isDuplicated(drawing.getIsDuplicated())
                 .build();
     }
 }

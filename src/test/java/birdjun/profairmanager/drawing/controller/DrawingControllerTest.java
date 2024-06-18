@@ -169,7 +169,6 @@ class DrawingControllerTest {
         return Drawing.builder()
                 .name(name)
                 .user(user)
-                .isDuplicated(Boolean.FALSE)
                 .winnerCount(1)
                 .build();
     }

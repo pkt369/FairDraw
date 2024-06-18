@@ -32,4 +32,18 @@ public class UserSetUp {
                 .guardianPhone("01033334444")
                 .build();
     }
+
+    public Student createStudent(String name, User user) {
+        Student student = Student.builder()
+                .name(name)
+                .birth("970409")
+                .gender(Gender.M)
+                .disabledType(DisabledType.NONE)
+                .guardianName("hong")
+                .phone("01011112222")
+                .guardianPhone("01033334444")
+                .build();
+        student.initUser(user);
+        return student;
+    }
 }

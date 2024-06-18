@@ -29,12 +29,11 @@ public class Drawing {
     @Column(nullable = false)
     private Integer winnerCount;
 
-    @Column(nullable = false)
-    private Boolean isDuplicated;
-
     @CreatedDate
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

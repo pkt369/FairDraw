@@ -2,8 +2,13 @@ package birdjun.profairmanager.drawing.service;
 
 import birdjun.profairmanager.common.UserSetUp;
 import birdjun.profairmanager.drawing.domain.Drawing;
+import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
+import birdjun.profairmanager.drawing.domain.dto.DrawingResponse;
+import birdjun.profairmanager.drawing.repository.ContestantRepository;
 import birdjun.profairmanager.drawing.repository.DrawingRepository;
+import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
+import birdjun.profairmanager.user.repository.StudentRepository;
 import birdjun.profairmanager.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,12 +32,17 @@ class DrawingServiceTest {
     private DrawingRepository drawingRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ContestantRepository contestantRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+
     private UserSetUp userSetUp;
 
 
     @BeforeEach
     void setUp() {
-        drawingService = new DrawingService(drawingRepository);
+        drawingService = new DrawingService(drawingRepository, contestantRepository, studentRepository);
         userSetUp = new UserSetUp(userRepository);
     }
 
@@ -122,11 +133,40 @@ class DrawingServiceTest {
         assertEquals(0, list.size());
     }
 
+    @Test
+    @DisplayName("추첨 시 이전 추첨 당첨자 제거 없이 추첨시 성공적으로 뽑혀야 한다.")
+    public void givenDrawingParams_whenRandomDrawing_thenReturnDrawingResponse() {
+        //given
+        User user1 = userSetUp.createUser("user1");
+        userSetUp.save(user1);
+
+        List<Student> students = new ArrayList<>();
+        students.add(userSetUp.createStudent("student1", user1));
+        students.add(userSetUp.createStudent("student2", user1));
+        students.add(userSetUp.createStudent("student3", user1));
+        students.add(userSetUp.createStudent("student4", user1));
+        students.add(userSetUp.createStudent("student5", user1));
+        studentRepository.saveAll(students);
+
+        DrawingDto drawingDto = DrawingDto.builder()
+                .name("test1")
+                .winnerCount(1)
+                .studentIdList(students.stream().map(Student::getId).toList())
+                .build();
+
+        //when
+        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingDto, user1);
+
+        //then
+        assertEquals(1, drawingResponse.getWinnerCount());
+        assertEquals(1, drawingResponse.getWinnerList().size());
+        assertEquals(4, drawingResponse.getLoserList().size());
+    }
+
     private Drawing createDrawing(String name, User user) {
         return Drawing.builder()
                 .name(name)
                 .user(user)
-                .isDuplicated(Boolean.FALSE)
                 .winnerCount(1)
                 .build();
     }
