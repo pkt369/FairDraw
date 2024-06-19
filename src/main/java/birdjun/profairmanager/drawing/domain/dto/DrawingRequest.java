@@ -13,22 +13,22 @@ import java.util.List;
 @Data
 @Builder
 @Getter
-public class DrawingDto {
+public class DrawingRequest {
+    @NotNull
     private String name;
+    @NotNull
     private Integer winnerCount;
+    @NotNull
+    @Builder.Default
+    private List<Long> studentIdList = new ArrayList<>();
+    @Builder.Default
+    private List<Long> removeDrawingIdList = new ArrayList<>();
 
     public Drawing toEntity(User user) {
         return Drawing.builder()
                 .name(this.name)
                 .winnerCount(winnerCount)
                 .user(user)
-                .build();
-    }
-
-    public static DrawingDto toDto(Drawing drawing) {
-        return DrawingDto.builder()
-                .name(drawing.getName())
-                .winnerCount(drawing.getWinnerCount())
                 .build();
     }
 }

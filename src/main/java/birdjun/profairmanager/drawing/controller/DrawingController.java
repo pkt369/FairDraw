@@ -3,8 +3,8 @@ package birdjun.profairmanager.drawing.controller;
 import birdjun.profairmanager.config.ApiResponse;
 import birdjun.profairmanager.drawing.domain.Drawing;
 import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
+import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
 import birdjun.profairmanager.drawing.service.DrawingService;
-import birdjun.profairmanager.user.domain.Role;
 import birdjun.profairmanager.user.domain.User;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,9 +36,9 @@ public class DrawingController {
 
     @PostMapping("/create")
     @ResponseBody
-    public ApiResponse<String> create(@Valid @RequestBody DrawingDto drawingDto) {
+    public ApiResponse<String> create(@Valid @RequestBody DrawingRequest drawingRequest) {
         User user = (User) httpSession.getAttribute("user");
-        drawingService.save(drawingDto.toEntity(user));
+        drawingService.save(drawingRequest.toEntity(user));
         return ApiResponse.success("ok");
     }
 

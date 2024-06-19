@@ -2,8 +2,11 @@ package birdjun.profairmanager.drawing.controller;
 
 import birdjun.profairmanager.common.UserSetUp;
 import birdjun.profairmanager.drawing.domain.Drawing;
+import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
 import birdjun.profairmanager.drawing.service.DrawingService;
+import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
+import birdjun.profairmanager.user.repository.StudentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -39,6 +44,8 @@ class DrawingControllerTest {
     private DrawingService drawingService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Test
     @DisplayName("추첨 생성 요청을 하면 생성이 되어야 한다.")
@@ -48,12 +55,23 @@ class DrawingControllerTest {
         User user = userSetUp.createUser("user1");
         userSetUp.save(user);
 
-        Drawing drawing = createDrawing("drawing1", user);
+        Student student1 = userSetUp.createStudent("student1", user);
+        Student student2 = userSetUp.createStudent("student2", user);
+        studentRepository.saveAll(Arrays.asList(student1, student2));
 
+        DrawingRequest drawingRequest = DrawingRequest.builder()
+                .name("drawing1")
+                .studentIdList(Arrays.asList(student1.getId(), student2.getId()))
+                .winnerCount(1)
+                .build();
+
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mockHttpSession.setAttribute("user", user);
         //when
         ResultActions resultActions = mockMvc.perform(post("/drawing/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(drawing))
+                        .content(objectMapper.writeValueAsString(drawingRequest))
+                        .session(mockHttpSession)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print());
 
@@ -79,11 +97,7 @@ class DrawingControllerTest {
         drawingService.save(drawing2);
 
         //when
-        //given
-        User user = userSetUp.createUser("user1");
-        userSetUp.save(user);
-
-        createDrawing("drawing1", user);
+        createDrawing("drawing1", user1);
 
         //when
         MockHttpSession mockHttpSession = new MockHttpSession();

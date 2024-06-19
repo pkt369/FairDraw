@@ -3,6 +3,7 @@ package birdjun.profairmanager.drawing.service;
 import birdjun.profairmanager.common.UserSetUp;
 import birdjun.profairmanager.drawing.domain.Drawing;
 import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
+import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
 import birdjun.profairmanager.drawing.domain.dto.DrawingResponse;
 import birdjun.profairmanager.drawing.repository.ContestantRepository;
 import birdjun.profairmanager.drawing.repository.DrawingRepository;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -148,14 +150,44 @@ class DrawingServiceTest {
         students.add(userSetUp.createStudent("student5", user1));
         studentRepository.saveAll(students);
 
-        DrawingDto drawingDto = DrawingDto.builder()
+        DrawingRequest drawingRequest = DrawingRequest.builder()
                 .name("test1")
                 .winnerCount(1)
                 .studentIdList(students.stream().map(Student::getId).toList())
                 .build();
 
         //when
-        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingDto, user1);
+        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingRequest, user1);
+
+        //then
+        assertEquals(1, drawingResponse.getWinnerCount());
+        assertEquals(1, drawingResponse.getWinnerList().size());
+        assertEquals(4, drawingResponse.getLoserList().size());
+    }
+
+    @Test
+    @DisplayName("추첨 시 이전 추첨 당첨자 제거 있을때 추첨시 이전 당첨자를 제거하고 성공적으로 뽑혀야 한다.")
+    public void givenDrawingParamsWithDrawingId_whenRandomDrawing_thenReturnDrawingResponse() {
+        //given
+        User user1 = userSetUp.createUser("user1");
+        userSetUp.save(user1);
+
+        List<Student> students = new ArrayList<>();
+        students.add(userSetUp.createStudent("student1", user1));
+        students.add(userSetUp.createStudent("student2", user1));
+        students.add(userSetUp.createStudent("student3", user1));
+        students.add(userSetUp.createStudent("student4", user1));
+        students.add(userSetUp.createStudent("student5", user1));
+        studentRepository.saveAll(students);
+
+        DrawingRequest drawingRequest = DrawingRequest.builder()
+                .name("test1")
+                .winnerCount(1)
+                .studentIdList(students.stream().map(Student::getId).toList())
+                .build();
+        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingRequest, user1);
+
+        //when
 
         //then
         assertEquals(1, drawingResponse.getWinnerCount());
