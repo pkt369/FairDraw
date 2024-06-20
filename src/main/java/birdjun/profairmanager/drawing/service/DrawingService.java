@@ -46,7 +46,7 @@ public class DrawingService {
         List<Student> attemptStudent = students.stream().filter(student -> !map.containsKey(student)).toList();
 
         Map<Student, Integer> winnerMap = new HashMap<>();
-        while (winnerMap.size() < drawingRequest.getWinnerCount()) {
+        while (winnerMap.size() < drawingRequest.getWinnerCount() && winnerMap.size() < attemptStudent.size()) {
             Random random = new Random();
             int index = random.nextInt(attemptStudent.size());
             winnerMap.put(attemptStudent.get(index), 1);

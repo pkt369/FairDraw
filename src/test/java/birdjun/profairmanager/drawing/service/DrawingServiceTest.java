@@ -22,8 +22,10 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -180,20 +182,58 @@ class DrawingServiceTest {
         students.add(userSetUp.createStudent("student5", user1));
         studentRepository.saveAll(students);
 
-        DrawingRequest drawingRequest = DrawingRequest.builder()
+        DrawingRequest drawingRequest1 = DrawingRequest.builder()
                 .name("test1")
-                .winnerCount(1)
+                .winnerCount(4)
                 .studentIdList(students.stream().map(Student::getId).toList())
                 .build();
-        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingRequest, user1);
+        DrawingResponse drawingResponse1 = drawingService.randomDrawing(drawingRequest1, user1);
+
+        DrawingRequest drawingRequest2 = DrawingRequest.builder()
+                .studentIdList(students.stream().map(Student::getId).toList())
+                .name("test2")
+                .winnerCount(1)
+                .removeDrawingIdList(Arrays.asList(drawingResponse1.getId()))
+                .build();
 
         //when
+        DrawingResponse drawingResponse2 = drawingService.randomDrawing(drawingRequest2, user1);
 
         //then
-        assertEquals(1, drawingResponse.getWinnerCount());
-        assertEquals(1, drawingResponse.getWinnerList().size());
-        assertEquals(4, drawingResponse.getLoserList().size());
+        assertEquals(1, drawingResponse2.getWinnerCount());
+        Student winner = drawingResponse2.getWinnerList().getFirst();
+        List<Student> list = drawingResponse1.getWinnerList().stream().filter(student -> Objects.equals(student.getId(), winner.getId())).toList();
+        assertEquals(0, list.size());
+        assertEquals(0, drawingResponse2.getLoserList().size());
+        assertTrue(drawingResponse1.getLoserList().contains(winner));
     }
+
+    @Test
+    @DisplayName("추첨 시 학생 수 보다 추첨 당첨자가 더 많은 경우 모두 추첨 당첨자로 한다.")
+    public void givenContestantLessThanWinner_whenRandomDrawing_thenReturnDrawingResponse() {
+        //given
+        User user1 = userSetUp.createUser("user1");
+        userSetUp.save(user1);
+
+        List<Student> students = new ArrayList<>();
+        students.add(userSetUp.createStudent("student1", user1));
+        students.add(userSetUp.createStudent("student2", user1));
+        studentRepository.saveAll(students);
+
+        DrawingRequest drawingRequest1 = DrawingRequest.builder()
+                .name("test1")
+                .winnerCount(4)
+                .studentIdList(students.stream().map(Student::getId).toList())
+                .build();
+
+        //when
+        DrawingResponse drawingResponse1 = drawingService.randomDrawing(drawingRequest1, user1);
+
+        //then
+        assertEquals(2, drawingResponse1.getWinnerList().size());
+        assertEquals(0, drawingResponse1.getLoserList().size());
+    }
+
 
     private Drawing createDrawing(String name, User user) {
         return Drawing.builder()
