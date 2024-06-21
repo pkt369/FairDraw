@@ -2,8 +2,8 @@ package birdjun.profairmanager.drawing.controller;
 
 import birdjun.profairmanager.config.ApiResponse;
 import birdjun.profairmanager.drawing.domain.Drawing;
-import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
 import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
+import birdjun.profairmanager.drawing.domain.dto.DrawingResponse;
 import birdjun.profairmanager.drawing.service.DrawingService;
 import birdjun.profairmanager.user.domain.User;
 import jakarta.servlet.http.HttpSession;
@@ -36,26 +36,26 @@ public class DrawingController {
 
     @PostMapping("/create")
     @ResponseBody
-    public ApiResponse<String> create(@Valid @RequestBody DrawingRequest drawingRequest) {
+    public ApiResponse<DrawingResponse> create(@Valid @RequestBody DrawingRequest drawingRequest) {
         User user = (User) httpSession.getAttribute("user");
-        drawingService.save(drawingRequest.toEntity(user));
-        return ApiResponse.success("ok");
+        DrawingResponse drawingResponse = drawingService.randomDrawing(drawingRequest, user);
+        return ApiResponse.success(drawingResponse);
     }
 
     @GetMapping("/list")
     @ResponseBody
-    public ApiResponse<List<DrawingDto>> list(@PageableDefault Pageable pageable) {
+    public ApiResponse<List<DrawingResponse>> list(@PageableDefault Pageable pageable) {
         User user = (User) httpSession.getAttribute("user");
         List<Drawing> list = drawingService.findByUser(user, pageable);
-        return ApiResponse.success(list.stream().map(DrawingDto::toDto).toList());
+        return ApiResponse.success(list.stream().map(DrawingResponse::toResponse).toList());
     }
 
     @GetMapping("/list/name")
     @ResponseBody
-    public ApiResponse<List<DrawingDto>> listByName(@PageableDefault Pageable pageable,
+    public ApiResponse<List<DrawingResponse>> listByName(@PageableDefault Pageable pageable,
                                                     @RequestParam String name) {
         User user = (User) httpSession.getAttribute("user");
         List<Drawing> list = drawingService.findByNameAndUser(name, user, pageable);
-        return ApiResponse.success(list.stream().map(DrawingDto::toDto).toList());
+        return ApiResponse.success(list.stream().map(DrawingResponse::toResponse).toList());
     }
 }

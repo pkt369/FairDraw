@@ -21,7 +21,7 @@ public class TestAop {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            session.setAttribute("user", new User(69L, "박세준", "pkt0758@gmail.com", Role.USER, "https://lh3.googleusercontent.com/a/ACg8ocIRmFunt9aqbLy3zeHFjmtSaoRfEKeuPpxX4jicLSxYqqaY_b4=s96-c"));
+            session.setAttribute("user", new User(1L, "박세준", "pkt0758@gmail.com", Role.USER, "https://lh3.googleusercontent.com/a/ACg8ocIRmFunt9aqbLy3zeHFjmtSaoRfEKeuPpxX4jicLSxYqqaY_b4=s96-c"));
         }
     }
 }

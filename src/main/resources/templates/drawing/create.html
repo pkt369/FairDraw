@@ -8,12 +8,23 @@
 <body>
 <div layout:fragment="content">
     <div class="card mb-4">
-        <h5 class="card-header">조건</h5>
+        <h5 class="card-header">기능</h5>
         <div class="card-body">
+            <div class="row demo-vertical-spacing mb-3">
+                <label for="drawingName" class="col-md-1 col-form-label">이름</label>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" value="" id="drawingName">
+                </div>
+            </div>
             <div class="row demo-vertical-spacing mb-3">
                 <div class="col">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalToggle1">
                         <strong>학생 추가하기</strong>
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#beforeDrawingModal">
+                        <strong>이전 추첨 당첨자 제외</strong>
                     </button>
                 </div>
                 <div class="col">
@@ -23,13 +34,31 @@
                 </div>
                 <div class="col">
                     <div class="mb-0 row">
-                        <label for="studentSize" class="col-md-3 col-form-label">뽑힐 학생 수: </label>
+                        <label for="studentSize" class="col-md-3 col-form-label">추첨 인원: </label>
                         <div class="col-md-5">
                             <input class="form-control" type="number" value="1" id="studentSize">
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <h5 class="card-header">추첨 제외 리스트</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="me-3">이름</th>
+                    <th>날짜</th>
+                    <th>추첨 인원</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0" id="drawingTable">
+
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -59,7 +88,7 @@
     <div class="card-body">
         <div class="row demo-vertical-spacing">
             <div class="col">
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" id="drawingStartBtn">
                     <strong>추첨하기</strong>
                 </button>
             </div>
@@ -74,53 +103,52 @@
              style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalToggleLabel1">학생 만들기</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group input-group-merge">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalToggleLabel1">학생 만들기</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group input-group-merge">
                                 <span class="input-group-text" id="basic-addon-search31"><i
                                         class="bx bx-search"></i></span>
-                                <input type="text" class="form-control" placeholder="Search..." aria-label="Search..."
-                                       aria-describedby="basic-addon-search31" id="nameSearchInput">
-                            </div>
-                            <div class="text-end mb-3" style="margin: 10px 0 0 auto">
-                                <button type="button" class="btn btn-l btn-primary" id="nameSearchBtn">
-                                    <strong>검색</strong></button>
-                            </div>
-
-                            <div class="table-responsive text-nowrap">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>
-                                            <input class="form-check-input modal-checkbox" type="checkbox" value="" id="modalStudentCheckboxAll">
-                                            <label class="form-check-label" for="modalStudentCheckboxAll"></label>
-                                        </th>
-                                        <th>이름</th>
-                                        <th>생년월일</th>
-                                        <th>성별</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0" id="searchStudentTBody">
-
-                                    </tbody>
-                                </table>
-                            </div>
+                            <input type="text" class="form-control" placeholder="Search..." aria-label="Search..."
+                                   aria-describedby="basic-addon-search31" id="nameSearchInput">
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" data-bs-target="#modalToggle2" data-bs-toggle="modal"
-                                    data-bs-dismiss="modal">
-                                <strong>학생 만들기</strong>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                <strong>닫기</strong>
-                            </button>
-                            <button type="button" class="btn btn-primary" id="modalToPageBtn"><strong>저장</strong>
-                            </button>
+                        <div class="text-end mb-3" style="margin: 10px 0 0 auto">
+                            <button type="button" class="btn btn-l btn-primary" id="nameSearchBtn">
+                                <strong>검색</strong></button>
                         </div>
+
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <input class="form-check-input modal-checkbox" type="checkbox" value=""
+                                               id="modalStudentCheckboxAll">
+                                        <label class="form-check-label" for="modalStudentCheckboxAll"></label>
+                                    </th>
+                                    <th>이름</th>
+                                    <th>생년월일</th>
+                                    <th>성별</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0" id="searchStudentTBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-bs-target="#modalToggle2" data-bs-toggle="modal"
+                                data-bs-dismiss="modal">
+                            <strong>학생 만들기</strong>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <strong>닫기</strong>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="modalToPageBtn"><strong>저장</strong>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -218,9 +246,11 @@
                                 <p>2. 필수 컬럼은 <span class="text-danger">이름, 생년월일, 성별, 장애타입</span> 입니다.</p>
                                 <p>3. 생년월일은 8자리로 20000101 처럼 입력해주세요</p>
                                 <p>4. 성별은 남자면 M, 여자면 W 를 입력해주세요</p>
-                                <p>5. 장애타입은 NONE: "비장애", INTELLECTUAL: "지적장애", AUTISM: "자폐", LANGUAGE: "언어장애", DEVELOPMENTAL_DELAY: "발달장애" 로 영어로 입력해주세요</p>
+                                <p>5. 장애타입은 NONE: "비장애", INTELLECTUAL: "지적장애", AUTISM: "자폐", LANGUAGE: "언어장애",
+                                    DEVELOPMENTAL_DELAY: "발달장애" 로 영어로 입력해주세요</p>
                                 <p>6. 휴대폰 번호는 - (하이픈) 을 제거하고 01011112222 으로 올려주세요</p>
-                                <p><span class="text-danger">엑셀 업로드시 기존에 존재하지 않는 학생은 저장되고, 기존에 있던 학생은 중복으로 저장되지 않습니다.</span>
+                                <p><span
+                                        class="text-danger">엑셀 업로드시 기존에 존재하지 않는 학생은 저장되고, 기존에 있던 학생은 중복으로 저장되지 않습니다.</span>
                                     <br>업로드 완료시 해당 설명은 사라지고 해당하는 표가 나타납니다.</p>
                             </div>
                             <br>
@@ -228,12 +258,13 @@
                                 <label for="excelUploadBtn" class="form-label">엑셀업로드</label>
                                 <input class="form-control" type="file" id="excelUploadBtn" name="file">
                             </form>
-                            <div class="table-responsive text-nowrap"  id="excelUploadTable" style="display: none;">
+                            <div class="table-responsive text-nowrap" id="excelUploadTable" style="display: none;">
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
                                         <th>
-                                            <input class="form-check-input modal-checkbox" type="checkbox" value="" id="excelUploadCheckboxAll">
+                                            <input class="form-check-input modal-checkbox" type="checkbox" value=""
+                                                   id="excelUploadCheckboxAll">
                                             <label class="form-check-label" for="excelUploadCheckboxAll"></label>
                                         </th>
                                         <th>이름</th>
@@ -251,7 +282,63 @@
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                 <strong>닫기</strong>
                             </button>
-                            <button style="display: none" type="button" class="btn btn-primary" id="excelModalToPageBtn"><strong>저장</strong>
+                            <button style="display: none" type="button" class="btn btn-primary"
+                                    id="excelModalToPageBtn"><strong>저장</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 이전 추첨 list Modal -->
+        <div class="modal fade" id="beforeDrawingModal" aria-labelledby="beforeDrawingModalToggleLabel" tabindex="-1"
+             style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="beforeDrawingModalToggleLabel">이전 추첨 당첨자 제외하기</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i
+                                        class="bx bx-search"></i></span>
+                                <input type="text" class="form-control" placeholder="Search..." aria-label="Search..."
+                                       aria-describedby="basic-addon-search31" id="beforeDrawingSearch">
+                            </div>
+                            <div class="text-end mb-3" style="margin: 10px 0 0 auto">
+                                <button type="button" class="btn btn-l btn-primary" id="beforeDrawingSearchBtn">
+                                    <strong>검색</strong>
+                                </button>
+                            </div>
+                            <div class="table-responsive text-nowrap" id="beforeDrawingTable">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <input class="form-check-input modal-checkbox" type="checkbox" value=""
+                                                   id="modalDrawingCheckboxAll">
+                                            <label class="form-check-label" for="modalDrawingCheckboxAll"></label>
+                                        </th>
+                                        <th>이름</th>
+                                        <th>날짜</th>
+                                        <th>추첨 인원</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0" id="beforeDrawingTableBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <strong>닫기</strong>
+                            </button>
+                            <button type="button" class="btn btn-primary"
+                                    id="beforeDrawingModalToPageBtn"><strong>저장</strong>
                             </button>
                         </div>
                     </div>

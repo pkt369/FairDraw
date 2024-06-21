@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 const createHelper = {
     init() {
         createHelper.pullStudents();
+        createHelper.searchDrawingList();
         createHelper.addEvent();
         createHelper.addEventCheckbox();
     },
@@ -71,6 +72,82 @@ const createHelper = {
             const html = createHelper.createStudentTableRow(students);
             document.querySelector('#studentTable').innerHTML += html;
             $('#excelModal').modal('hide');
+        });
+
+        document.querySelector('#drawingStartBtn').addEventListener('click', () => {
+            const name = document.querySelector('#drawingName').value;
+            if (name.length === 0) {
+                alert("이름을 입력해주세요");
+                return false;
+            }
+            let studentIds = [];
+            document.querySelectorAll('.studentTableTr').forEach(el => {
+                console.log(el);
+                studentIds.push(el.getAttribute('data-id'));
+            });
+            if (studentIds.length === 0) {
+                alert("학생을 먼저 추가한 후 추첨을 해주세요.");
+                return false;
+            }
+            const winnerCount = document.querySelector('#studentSize').value;
+            if (winnerCount < 1) {
+                alert("추첨 인원은 1명이상 부터 추첨이 가능합니다.");
+                return false;
+            }
+
+            let param = {
+                "name": name,
+                "winnerCount": winnerCount,
+                "studentIds": studentIds,
+                "removeDrawingIds": []
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/drawing/create",
+                dataType: "json",
+                data: JSON.stringify(param),
+                contentType: 'application/json; charset=utf-8',
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                }
+            });
+        });
+
+        document.querySelector('#beforeDrawingSearchBtn').addEventListener('click', () => {
+            const name = document.querySelector('#beforeDrawingSearch').value;
+            if (name.length === 0) {
+                createHelper.searchDrawingList();
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "/drawing/list/name",
+                    dataType: "json",
+                    data: {"name": name},
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (res) {
+                        document.querySelector('#beforeDrawingTableBody').innerHTML = createHelper.createModalDrawingTableRow(res.data);
+                        document.querySelectorAll('.modalDrawingCheckbox').forEach(checkbox => {
+                            checkbox.addEventListener('change', function () {
+                                document.querySelector('#modalDrawingCheckboxAll').checked = document.querySelectorAll('.modalDrawingCheckbox').length === document.querySelectorAll('.modalDrawingCheckbox:checked').length;
+                            });
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
+        document.querySelector('#beforeModalDrawingToPageBtn').addEventListener('click', () => {
+            //drawingTable
+            document.querySelectorAll('.modalDrawingTableTr').forEach(el => {
+                // el.
+            });
         });
     },
 
@@ -171,7 +248,7 @@ const createHelper = {
         let html = '';
         students.forEach(student => {
             const gender = student.gender === 'M' ? '남자' : '여자';
-            html += `<tr>
+            html += `<tr class="studentTableTr" data-id="${student.id}">
                     <td><i class="fab fa-angular fa-lg text-danger me-3"></i><strong>${student.name}</strong></td>
                     <td>${student.birth}</td>
                     <td><span class="badge bg-label-primary me-1">${gender}</span></td>
@@ -217,6 +294,52 @@ const createHelper = {
                 return;
             }
             document.querySelectorAll('.modalStudentCheckbox').forEach(checkbox => checkbox.checked = false);
+        });
+
+        document.querySelector('#modalDrawingCheckboxAll').addEventListener('change', function () {
+            if (this.checked) {
+                document.querySelectorAll('.modalDrawingCheckbox').forEach(checkbox => checkbox.checked = true);
+                return;
+            }
+            document.querySelectorAll('.modalDrawingCheckbox').forEach(checkbox => checkbox.checked = false);
+        });
+    },
+
+    createModalDrawingTableRow(drawings) {
+        let html = '';
+        let index = 0;
+        for (const drawing of drawings) {
+            html += `<tr class="modalDrawingTableTr" data-id="${drawing.id}">
+                        <td>
+                            <input class="form-check-input modalDrawingCheckbox" type="checkbox" value="" id="modalCheckboxDrawing${index}">
+                            <label class="form-check-label" for="modalCheckboxDrawing${index}"></label>
+                        </td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i><strong>${drawing.name}</strong></td>
+                        <td>${drawing.createdAt}</td>
+                        <td>${drawing.winnerCount}</td>
+                    </tr>`;
+            index++;
+        }
+        return html;
+    },
+
+    searchDrawingList() {
+        $.ajax({
+            type: "get",
+            url: "/drawing/list",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (res) {
+                document.querySelector('#beforeDrawingTableBody').innerHTML = createHelper.createModalDrawingTableRow(res.data);
+                document.querySelectorAll('.modalDrawingCheckbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', function () {
+                        document.querySelector('#modalDrawingCheckboxAll').checked = document.querySelectorAll('.modalDrawingCheckbox').length === document.querySelectorAll('.modalDrawingCheckbox:checked').length;
+                    });
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+            }
         });
     },
 }

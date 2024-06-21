@@ -2,13 +2,13 @@ package birdjun.profairmanager.drawing.service;
 
 import birdjun.profairmanager.common.UserSetUp;
 import birdjun.profairmanager.drawing.domain.Drawing;
-import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
 import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
 import birdjun.profairmanager.drawing.domain.dto.DrawingResponse;
 import birdjun.profairmanager.drawing.repository.ContestantRepository;
 import birdjun.profairmanager.drawing.repository.DrawingRepository;
 import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
+import birdjun.profairmanager.user.dto.StudentDto;
 import birdjun.profairmanager.user.repository.StudentRepository;
 import birdjun.profairmanager.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Rollback
 class DrawingServiceTest {
 
     private DrawingService drawingService;
@@ -155,7 +157,7 @@ class DrawingServiceTest {
         DrawingRequest drawingRequest = DrawingRequest.builder()
                 .name("test1")
                 .winnerCount(1)
-                .studentIdList(students.stream().map(Student::getId).toList())
+                .studentIds(students.stream().map(Student::getId).toList())
                 .build();
 
         //when
@@ -185,15 +187,15 @@ class DrawingServiceTest {
         DrawingRequest drawingRequest1 = DrawingRequest.builder()
                 .name("test1")
                 .winnerCount(4)
-                .studentIdList(students.stream().map(Student::getId).toList())
+                .studentIds(students.stream().map(Student::getId).toList())
                 .build();
         DrawingResponse drawingResponse1 = drawingService.randomDrawing(drawingRequest1, user1);
 
         DrawingRequest drawingRequest2 = DrawingRequest.builder()
-                .studentIdList(students.stream().map(Student::getId).toList())
+                .studentIds(students.stream().map(Student::getId).toList())
                 .name("test2")
                 .winnerCount(1)
-                .removeDrawingIdList(Arrays.asList(drawingResponse1.getId()))
+                .removeDrawingIds(Arrays.asList(drawingResponse1.getId()))
                 .build();
 
         //when
@@ -201,8 +203,8 @@ class DrawingServiceTest {
 
         //then
         assertEquals(1, drawingResponse2.getWinnerCount());
-        Student winner = drawingResponse2.getWinnerList().getFirst();
-        List<Student> list = drawingResponse1.getWinnerList().stream().filter(student -> Objects.equals(student.getId(), winner.getId())).toList();
+        StudentDto winner = drawingResponse2.getWinnerList().getFirst();
+        List<StudentDto> list = drawingResponse1.getWinnerList().stream().filter(student -> Objects.equals(student.getId(), winner.getId())).toList();
         assertEquals(0, list.size());
         assertEquals(0, drawingResponse2.getLoserList().size());
         assertTrue(drawingResponse1.getLoserList().contains(winner));
@@ -223,7 +225,7 @@ class DrawingServiceTest {
         DrawingRequest drawingRequest1 = DrawingRequest.builder()
                 .name("test1")
                 .winnerCount(4)
-                .studentIdList(students.stream().map(Student::getId).toList())
+                .studentIds(students.stream().map(Student::getId).toList())
                 .build();
 
         //when

@@ -2,13 +2,13 @@ package birdjun.profairmanager.drawing.service;
 
 import birdjun.profairmanager.drawing.domain.Contestant;
 import birdjun.profairmanager.drawing.domain.Drawing;
-import birdjun.profairmanager.drawing.domain.dto.DrawingDto;
 import birdjun.profairmanager.drawing.domain.dto.DrawingRequest;
 import birdjun.profairmanager.drawing.domain.dto.DrawingResponse;
 import birdjun.profairmanager.drawing.repository.ContestantRepository;
 import birdjun.profairmanager.drawing.repository.DrawingRepository;
 import birdjun.profairmanager.user.domain.Student;
 import birdjun.profairmanager.user.domain.User;
+import birdjun.profairmanager.user.dto.StudentDto;
 import birdjun.profairmanager.user.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +38,11 @@ public class DrawingService {
     }
 
     public DrawingResponse randomDrawing(DrawingRequest drawingRequest, User user) {
-        List<Contestant> beforeWinner = contestantRepository.findByAllDrawing_IdAndIsWinner(drawingRequest.getRemoveDrawingIdList(), true);
+        List<Contestant> beforeWinner = contestantRepository.findByAllDrawing_IdAndIsWinner(drawingRequest.getRemoveDrawingIds(), true);
         Map<Student, Integer> map = new HashMap<>();
         beforeWinner.forEach(contestant -> map.put(contestant.getStudent(), 1));
 
-        List<Student> students = studentRepository.findAllById(drawingRequest.getStudentIdList());
+        List<Student> students = studentRepository.findAllById(drawingRequest.getStudentIds());
         List<Student> attemptStudent = students.stream().filter(student -> !map.containsKey(student)).toList();
 
         Map<Student, Integer> winnerMap = new HashMap<>();
@@ -68,8 +68,8 @@ public class DrawingService {
                 ).toList();
         contestantRepository.saveAll(contestantList);
 
-        List<Student> winner = winnerMap.keySet().stream().toList();
-        List<Student> loser = attemptStudent.stream().filter(student -> !winnerMap.containsKey(student)).toList();
+        List<StudentDto> winner = winnerMap.keySet().stream().map(StudentDto::fromEntity).toList();
+        List<StudentDto> loser = attemptStudent.stream().filter(student -> !winnerMap.containsKey(student)).map(StudentDto::fromEntity).toList();
 
         return DrawingResponse.builder()
                 .id(drawing.getId())

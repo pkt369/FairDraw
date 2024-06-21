@@ -20,9 +20,9 @@ public class DrawingRequest {
     private Integer winnerCount;
     @NotNull
     @Builder.Default
-    private List<Long> studentIdList = new ArrayList<>();
+    private List<Long> studentIds = new ArrayList<>();
     @Builder.Default
-    private List<Long> removeDrawingIdList = new ArrayList<>();
+    private List<Long> removeDrawingIds = new ArrayList<>();
 
     public Drawing toEntity(User user) {
         return Drawing.builder()

@@ -61,7 +61,7 @@ class DrawingControllerTest {
 
         DrawingRequest drawingRequest = DrawingRequest.builder()
                 .name("drawing1")
-                .studentIdList(Arrays.asList(student1.getId(), student2.getId()))
+                .studentIds(Arrays.asList(student1.getId(), student2.getId()))
                 .winnerCount(1)
                 .build();
 

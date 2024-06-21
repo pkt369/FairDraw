@@ -67,11 +67,12 @@ public class StudentService {
                 }
                 data.add(this.excelRowToStudent(row, user));
             }
-            List<Student> removeDuplicateStudents = this.removeDuplicateStudents(data, user);
+            List<Student> removeDuplicateStudents = removeDuplicateStudents(data, user);
             removeDuplicateStudents.forEach(student -> student.initUser(user));
 
-            List<Student> students = studentRepository.saveAll(removeDuplicateStudents);
-            return students.stream().map(StudentDto::fromEntity).toList();
+            studentRepository.saveAll(removeDuplicateStudents);
+
+            return data.stream().map(StudentDto::fromEntity).toList();
         } catch (IOException e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
